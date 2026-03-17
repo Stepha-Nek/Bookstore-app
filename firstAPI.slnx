@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="docker-compose.yml" />
+  </Folder>
   <Project Path="firstAPI.Tests/firstAPI.Tests.csproj" Id="60468d70-9ef2-408d-8504-460269b76368" />
   <Project Path="firstAPI/firstAPI.csproj" />
 </Solution>

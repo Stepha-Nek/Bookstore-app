@@ -43,6 +43,26 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
+// Auto migrate database on startup with retry
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<FirstAPIContext>();
+    var retries = 5;
+    while (retries > 0)
+    {
+        try
+        {
+            db.Database.Migrate();
+            break;
+        }
+        catch
+        {
+            retries--;
+            Thread.Sleep(5000); // wait 5 seconds before retrying
+        }
+    }
+}
+
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
@@ -55,6 +75,7 @@ app.UseAuthentication(); // ← this line was missing in yours!
 app.UseAuthorization();
 
 app.MapControllers();
+
 
 app.Run();
 
