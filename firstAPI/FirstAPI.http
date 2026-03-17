@@ -1,0 +1,35 @@
+
+@rootURL = http://localhost:7271
+
+GET {{rootURL}}/weatherforecast/
+Accept: application/json
+
+###  
+GET {{rootURL}}/api/books  
+Accept: application/json  
+
+###
+GET {{rootURL}}/api/books/2
+Accept: application/json
+
+###
+POST {{rootURL}}/api/books
+Content-Type: application/json
+{
+  "id": "6",
+  "title": "Ike",
+  "author": "Nneka",
+  "yearPublished": "2019"
+}
+###
+PUT {{rootURL}}/api/books/5
+Content-Type: application/json
+{
+  "id": "5",
+  "title": "love and war",
+  "author": "Nneka",
+  "yearPublished": "2026"
+}
+
+###
+DELETE{{rootURL}}/api/books/4
