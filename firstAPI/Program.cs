@@ -8,9 +8,13 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Database
+// Database, using sql server, changed it to sqlite for testing and ease of use, you can switch back to sql server if you have it installed
+//builder.Services.AddDbContext<FirstAPIContext>(options =>
+    //options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+//sqlite, cos i was having issues with azure hosting.
 builder.Services.AddDbContext<FirstAPIContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite("Data Source=bookstore.db"));
 
 // Identity
 builder.Services.AddIdentity<User, IdentityRole>()

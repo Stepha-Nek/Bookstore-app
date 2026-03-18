@@ -10,7 +10,11 @@ namespace FirstAPI.Data
         public FirstAPIContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<FirstAPIContext>();
-            optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=FirstAPI_data;Integrated Security=True;Encrypt=False;Trust Server Certificate=True");
+            //changed from sql server to sqlite, cos i was having hosting issues with azure
+            //optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=FirstAPI_data;Integrated Security=True;Encrypt=False;Trust Server Certificate=True");
+            
+            //using sqlite
+            optionsBuilder.UseSqlite("Data Source=bookstore.db");
 
             return new FirstAPIContext(optionsBuilder.Options);
         }
