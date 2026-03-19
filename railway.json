@@ -2,10 +2,10 @@
   "$schema": "https://railway.app/railway.schema.json",
   "build": {
     "builder": "DOCKERFILE",
-    "dockerfilePath": "firstAPI/Dockerfile"
+    "dockerfilePath": "firstAPI/Dockerfile",
+    "buildContext": "firstAPI"
   },
   "deploy": {
-    "startCommand": "dotnet firstAPI.dll",
     "restartPolicyType": "ON_FAILURE"
   }
 }
