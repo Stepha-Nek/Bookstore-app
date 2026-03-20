@@ -43,12 +43,15 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddControllers();
-// Add this after builder.Services.AddControllers();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:3000")
+        policy.WithOrigins(
+			"http://localhost:3000"
+			"https://bookstore-6gjg6zqa0-stepha-neks-projects.vercel.app"
+			)
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
