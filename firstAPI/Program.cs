@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Database, using sql server, changed it to sqlite for testing and ease of use, you can switch back to sql server if you have it installed
@@ -43,6 +44,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddControllers();
+builder.Services.AddHttpClient();
 
 builder.Services.AddCors(options =>
 {

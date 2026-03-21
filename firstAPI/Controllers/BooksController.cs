@@ -1,9 +1,10 @@
-﻿using FirstAPI.Models;  
-using FirstAPI.Data;
+﻿using FirstAPI.Data;
+using FirstAPI.Models;  
+using Microsoft.AspNetCore.Authorization; //for using the Authorize attribute to secure endpoints, if needed in the future
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization; //for using the Authorize attribute to secure endpoints, if needed in the future
+using System.Text.Json;
 
 namespace FirstAPI.Models
 {
@@ -52,10 +53,16 @@ namespace FirstAPI.Models
         //};
 
         private readonly FirstAPIContext _context;
-        public BooksController(FirstAPIContext context)
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IConfiguration _configuration;
+
+        public BooksController(FirstAPIContext context, IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _context = context;
+            _httpClientFactory = httpClientFactory;
+            _configuration = configuration;
         }
+
         [HttpGet]
         public async Task<ActionResult<List<Book>>> GetBooks()
         {
@@ -181,6 +188,46 @@ namespace FirstAPI.Models
 
 
         }
-    }
 
+        [HttpPost]
+        [Route("api/books/recommend")]
+        public async Task<IActionResult> RecommendBooks([FromBody] RecommendDto request)
+        {
+            var apiKey = _configuration["Groq:ApiKey"];
+            var model = _configuration["Groq:Model"];
+
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
+
+            var body = new
+            {
+                model = model,
+                messages = new[]
+                {
+                    new
+                    {
+                        role = "user",
+                        content = $"I just read '{request.BookTitle}'. Recommend 3 similar books in 2-3 sentences each. Be concise."
+                    }
+                }
+            };
+
+            var response = await client.PostAsJsonAsync("https://api.groq.com/openai/v1/chat/completions", body);
+            var rawJson = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
+                return BadRequest(rawJson);
+
+            var result = JsonSerializer.Deserialize<JsonElement>(rawJson);
+            var recommendation = result
+                .GetProperty("choices")[0]
+                .GetProperty("message")
+                .GetProperty("content")
+                .GetString();
+
+            return Ok(new { recommendations = recommendation });
+        }
+    }
 }
+    
+
