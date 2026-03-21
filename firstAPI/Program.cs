@@ -50,13 +50,11 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins(
-			"http://localhost:3000",
-			"https://bookstore-6gjg6zqa0-stepha-neks-projects.vercel.app",
-            "https://bookstore-app-weld.vercel.app"
-            )
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+        policy.SetIsOriginAllowed(origin =>
+            origin.StartsWith("http://localhost") ||
+            origin.EndsWith(".vercel.app"))
+        .AllowAnyHeader()
+        .AllowAnyMethod();
     });
 });
 builder.Services.AddOpenApi();
