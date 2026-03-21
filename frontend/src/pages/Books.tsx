@@ -10,6 +10,8 @@ export default function Books() {
   const [year, setYear] = useState('');
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
+  const [recommendation, setRecommendation] = useState('');
+  const [loadingRec, setLoadingRec] = useState(false);
 
   useEffect(() => {
     fetchBooks();
@@ -19,6 +21,17 @@ export default function Books() {
     const response = await api.get('/api/books');
     setBooks(response.data);
   };
+  const handleRecommend = async (title: string) => {
+  setLoadingRec(true);
+  setRecommendation('');
+  try {
+    const response = await api.post('/api/books/recommend', { bookTitle: title });
+    setRecommendation(response.data.recommendations);
+  } catch {
+    setRecommendation('Failed to get recommendations.');
+  }
+  setLoadingRec(false);
+};
 
   const handleAdd = async () => {
     await api.post('/api/books', { title, author, yearPublished: parseInt(year) });
@@ -58,10 +71,20 @@ export default function Books() {
           <div key={book.id} className="book-card">
             <h3>{book.title}</h3>
             <p>{book.author} — {book.yearPublished}</p>
+	    <button onClick={() => handleRecommend(book.title)}>
+  🤖 Recommend
+</button>
             {token && <button onClick={() => handleDelete(book.id)}>Delete</button>}
           </div>
         ))}
       </div>
+      {recommendation && (
+      <div className="recommendation-box">
+        <h3>📚 AI Recommendations</h3>
+        <p>{loadingRec ? 'Loading...' : recommendation}</p>
+      </div>
+    )}
+
     </div>
   );
 }
