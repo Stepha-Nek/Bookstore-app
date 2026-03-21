@@ -33,6 +33,7 @@ A full-stack bookstore application built with ASP.NET Core, React, and TypeScrip
 - Add, update and delete books (authenticated users only)
 - Fully tested with xUnit (unit, integration and controller tests)
 - Automated CI/CD — tests run on every push
+- AI-powered book recommendations using Groq (Llama 3.3)
 
 ##  Running Locally
 
