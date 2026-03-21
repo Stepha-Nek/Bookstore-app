@@ -192,8 +192,8 @@ namespace FirstAPI.Models
         [HttpPost("recommend")]
         public async Task<IActionResult> RecommendBooks([FromBody] RecommendDto request)
         {
-            var apiKey = _configuration["Groq__ApiKey"];
-            var model = _configuration["Groq__Model"];
+            var apiKey = _configuration["Groq:ApiKey"];
+            var model = _configuration["Groq:Model"];
 
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
